@@ -14,7 +14,7 @@ Combustion.initialize! :active_record do
 end
 
 require "rspec/rails"
-require "saltbox-sort_by_columns"
+require "sort_by_columns"
 
 # ----------------------------------------------------------------------------
 # ActiveRecord schema for the dummy app

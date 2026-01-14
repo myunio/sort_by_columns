@@ -21,7 +21,7 @@ end
 # Basic integration test - full functionality is tested in the consuming applications
 RSpec.describe "SortByColumns integration" do
   it "loads without errors" do
-    expect { require "saltbox-sort_by_columns" }.not_to raise_error
+    expect { require "sort_by_columns" }.not_to raise_error
   end
 
   it "defines the expected constants" do

@@ -84,7 +84,7 @@ module Saltbox
         def column_sortable_by(*allowed_fields)
           # Rails 7.1+ modern deprecation handling
           deprecator = Rails.application.deprecators[:saltbox_sort_by_columns] ||=
-            ActiveSupport::Deprecation.new("2.0", "saltbox-sort_by_columns")
+            ActiveSupport::Deprecation.new("2.0", "sort_by_columns")
 
           deprecator.warn(
             "`column_sortable_by` is deprecated and will be removed in a future version. " \

@@ -17,7 +17,7 @@ A Ruby gem that provides column-based sorting capabilities for Rails models with
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'saltbox-sort_by_columns', git: 'https://github.com/myunio/saltbox-sort_by_columns.git'
+gem 'sort_by_columns', git: 'https://github.com/myunio/sort_by_columns.git'
 ```
 
 And then execute:
@@ -77,7 +77,7 @@ This gem is built on top of the [has_scope](https://github.com/heartcombo/has_sc
 
 ### How it works
 
-**has_scope** handles the parameter processing and scope application, while **saltbox-sort_by_columns** provides the sorting logic:
+**has_scope** handles the parameter processing and scope application, while **sort_by_columns** provides the sorting logic:
 
 1. **Parameter Processing**: has_scope automatically reads the `sort` parameter from the request
 2. **Scope Definition**: This gem automatically defines a `sorted_by_columns` scope on your models
@@ -298,7 +298,7 @@ For local development of the gem itself:
 
 ```bash
 # Set up local development
-bundle config local.saltbox-sort_by_columns /path/to/saltbox-sort_by_columns
+bundle config local.sort_by_columns /path/to/sort_by_columns
 bundle install
 
 # Run tests
@@ -311,15 +311,57 @@ rake standard
 rake build
 ```
 
+## Version Management
+
+The gem includes rake tasks for managing version bumps:
+
+```bash
+# Check current version
+rake version:current
+
+# Preview what the next version would be (no changes made)
+rake 'version:preview[patch]'   # Preview patch bump (1.0.1 → 1.0.2)
+rake 'version:preview[minor]'   # Preview minor bump (1.0.1 → 1.1.0)
+rake 'version:preview[major]'   # Preview major bump (1.0.1 → 2.0.0)
+
+# Bump version (updates version.rb, CHANGELOG.md, commits, and tags)
+rake 'version:bump[patch]'      # Bump patch version
+rake 'version:bump[minor]'      # Bump minor version
+rake 'version:bump[major]'      # Bump major version
+```
+
+**Note:** The square brackets must be quoted in zsh/bash to prevent shell expansion. Use single quotes around the entire task name.
+
+After bumping, the task will:
+- Update `lib/saltbox/sort_by_columns/version.rb`
+- Add a new entry template to `CHANGELOG.md`
+- Create a git commit
+- Create an annotated git tag (e.g., `v1.0.2`)
+- Show you the commands to push to GitHub
+
+**Example release workflow:**
+```bash
+# 1. Preview the version bump
+rake 'version:preview[patch]'
+
+# 2. Bump the version
+rake 'version:bump[patch]'
+
+# 3. Edit CHANGELOG.md to fill in the changes
+
+# 4. Push to GitHub
+git push origin main --follow-tags
+```
+
 For development in a Rails application using the gem:
 
 ```bash
 # Set up local development when needed
-bundle config local.saltbox-sort_by_columns /path/to/saltbox-sort_by_columns
+bundle config local.sort_by_columns /path/to/sort_by_columns
 bundle install
 
 # Return to remote gem when done
-bundle config --delete local.saltbox-sort_by_columns
+bundle config --delete local.sort_by_columns
 bundle install
 ```
 

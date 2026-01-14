@@ -10,7 +10,7 @@ SimpleCov.start do
   add_group "Models", "lib/saltbox/sort_by_columns/model.rb"
   add_group "Controllers", "lib/saltbox/sort_by_columns/controller.rb"
   add_group "Railtie", "lib/saltbox/sort_by_columns/railtie.rb"
-  add_group "Core", ["lib/saltbox/sort_by_columns.rb", "lib/saltbox-sort_by_columns.rb"]
+  add_group "Core", ["lib/saltbox/sort_by_columns.rb", "lib/sort_by_columns.rb"]
 
   # Set minimum coverage thresholds
   minimum_coverage 95
@@ -98,7 +98,7 @@ unless defined?(Rails)
   Rails.env.define_singleton_method(:local?) { false }
 end
 
-require "saltbox-sort_by_columns"
+require "sort_by_columns"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
