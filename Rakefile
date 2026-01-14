@@ -5,6 +5,9 @@ require "bundler/gem_tasks"
 require "rspec/core/rake_task"
 require "standard/rake"
 
+VERSION_FILE = "lib/saltbox/sort_by_columns/version.rb"
+CHANGELOG_FILE = "CHANGELOG.md"
+
 RSpec::Core::RakeTask.new(:spec)
 
 task default: [:spec, :standard]
@@ -36,9 +39,6 @@ task :clean do
 end
 
 namespace :version do
-  VERSION_FILE = "lib/saltbox/sort_by_columns/version.rb"
-  CHANGELOG_FILE = "CHANGELOG.md"
-
   def calculate_new_version(type)
     require_relative VERSION_FILE
     current_version = Saltbox::SortByColumns::VERSION

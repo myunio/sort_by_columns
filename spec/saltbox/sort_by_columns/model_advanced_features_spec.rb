@@ -454,7 +454,7 @@ RSpec.describe Saltbox::SortByColumns::Model, "Advanced Features & Custom Scopes
 
       context "builds order fragments array" do
         it "builds fragments for standard columns" do
-          includes_needed, order_fragments = test_model.send(:process_standard_columns, "name:asc,email:desc")
+          _, order_fragments = test_model.send(:process_standard_columns, "name:asc,email:desc")
 
           expect(order_fragments).to be_an(Array)
           expect(order_fragments.length).to eq(2)
@@ -462,7 +462,7 @@ RSpec.describe Saltbox::SortByColumns::Model, "Advanced Features & Custom Scopes
         end
 
         it "builds fragments for association columns" do
-          includes_needed, order_fragments = test_model.send(:process_standard_columns, "organization__name:asc")
+          _, order_fragments = test_model.send(:process_standard_columns, "organization__name:asc")
 
           expect(order_fragments).to be_an(Array)
           expect(order_fragments.length).to eq(1)
@@ -470,7 +470,7 @@ RSpec.describe Saltbox::SortByColumns::Model, "Advanced Features & Custom Scopes
         end
 
         it "maintains order of fragments" do
-          includes_needed, order_fragments = test_model.send(:process_standard_columns, "email:desc,name:asc,organization__name:desc")
+          _, order_fragments = test_model.send(:process_standard_columns, "email:desc,name:asc,organization__name:desc")
 
           expect(order_fragments).to eq([
             "users.email DESC",
@@ -498,14 +498,14 @@ RSpec.describe Saltbox::SortByColumns::Model, "Advanced Features & Custom Scopes
           end
 
           it "skips disallowed columns but processes allowed ones" do
-            includes_needed, order_fragments = test_model.send(:process_standard_columns, "name:asc,invalid_column:desc,email:asc")
+            _, order_fragments = test_model.send(:process_standard_columns, "name:asc,invalid_column:desc,email:asc")
 
             expect(order_fragments).to eq(["users.name ASC", "users.email ASC"])
             expect(Rails.logger).to have_received(:warn).with("SortByColumns ignoring disallowed column: invalid_column")
           end
 
           it "skips multiple disallowed columns" do
-            includes_needed, order_fragments = test_model.send(:process_standard_columns, "invalid1:asc,name:desc,invalid2:asc")
+            _, order_fragments = test_model.send(:process_standard_columns, "invalid1:asc,name:desc,invalid2:asc")
 
             expect(order_fragments).to eq(["users.name DESC"])
             expect(Rails.logger).to have_received(:warn).twice
@@ -584,7 +584,7 @@ RSpec.describe Saltbox::SortByColumns::Model, "Advanced Features & Custom Scopes
           allow(Rails.env).to receive(:local?).and_return(false)
           allow(Rails).to receive(:logger).and_return(double("logger", warn: nil))
 
-          includes_needed, order_fragments = test_model.send(:process_standard_columns, "name:asc,::invalid::,email:desc")
+          _, order_fragments = test_model.send(:process_standard_columns, "name:asc,::invalid::,email:desc")
 
           expect(order_fragments).to eq(["users.name ASC", "users.email DESC"])
         end

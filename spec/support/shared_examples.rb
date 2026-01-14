@@ -9,7 +9,7 @@ if defined?(RSpec) && RSpec.respond_to?(:shared_examples)
     allowed_columns = options[:allowed_columns].map(&:to_sym) || [:name]
 
     # Specify a disallowed column to test that it is ignored
-    disallowed_column = options[:disallowed_column].to_sym || :age
+    disallowed_column = options[:disallowed_column].to_sym
 
     # Specify an associated column (optional) as a hash with the fields: name and
     # expected_sql e.g. {name: :region__name, expected_sql: "regions.name"}

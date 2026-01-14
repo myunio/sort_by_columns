@@ -70,7 +70,7 @@ RSpec.describe "SortByColumns integration", type: :model do
   context "custom scope column" do
     it "applies custom c_full_name scope" do
       # Add the custom column to allowed list for this example
-              User.sort_by_columns :name, :c_full_name
+      User.sort_by_columns :name, :c_full_name
       allow(User).to receive(:sorted_by_full_name).and_call_original
 
       result = User.sorted_by_columns("c_full_name:desc")

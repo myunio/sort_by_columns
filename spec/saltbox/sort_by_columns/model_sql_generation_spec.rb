@@ -253,7 +253,7 @@ RSpec.describe Saltbox::SortByColumns::Model, "SQL Generation & Association Test
       end
 
       it "builds order fragments array" do
-        includes_needed, order_fragments = test_model.send(:process_standard_columns, "name:asc,email:desc")
+        _, order_fragments = test_model.send(:process_standard_columns, "name:asc,email:desc")
 
         expect(order_fragments).to be_an(Array)
         expect(order_fragments.length).to eq(2)
@@ -266,7 +266,7 @@ RSpec.describe Saltbox::SortByColumns::Model, "SQL Generation & Association Test
         allow(Rails.env).to receive(:local?).and_return(false)
         allow(Rails).to receive(:logger).and_return(double("logger", warn: nil))
 
-        includes_needed, order_fragments = test_model.send(:process_standard_columns, "name:asc,disallowed_column:desc")
+        _, order_fragments = test_model.send(:process_standard_columns, "name:asc,disallowed_column:desc")
 
         expect(order_fragments).to include("users.name ASC")
         expect(order_fragments).not_to include("users.disallowed_column DESC")
@@ -276,7 +276,7 @@ RSpec.describe Saltbox::SortByColumns::Model, "SQL Generation & Association Test
         allow(Rails.env).to receive(:local?).and_return(false)
         allow(Rails).to receive(:logger).and_return(double("logger", warn: nil))
 
-        includes_needed, order_fragments = test_model.send(:process_standard_columns, "name:asc,invalid:desc,email:asc")
+        _, order_fragments = test_model.send(:process_standard_columns, "name:asc,invalid:desc,email:asc")
 
         expect(order_fragments).to include("users.name ASC")
         expect(order_fragments).to include("users.email ASC")
