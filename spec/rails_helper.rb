@@ -25,10 +25,16 @@ ActiveRecord::Schema.define(version: 1) do
     t.timestamps
   end
 
+  create_table :divisions, force: true do |t|
+    t.string :name
+    t.timestamps
+  end
+
   create_table :users, force: true do |t|
     t.string :name
     t.string :email
     t.references :organization, foreign_key: true
+    t.references :division, foreign_key: true
     t.timestamps
   end
 end
@@ -40,13 +46,18 @@ class Organization < ActiveRecord::Base
   has_many :users
 end
 
+class Division < ActiveRecord::Base
+  has_many :users
+end
+
 class User < ActiveRecord::Base
   include Saltbox::SortByColumns::Model
 
   belongs_to :organization
+  belongs_to :division, optional: true
 
   # Basic sortable columns for integration scenarios
-  sort_by_columns :name, :email, :organization__name
+  sort_by_columns :name, :email, :organization__name, :division__name
 
   # Example custom scope to demonstrate c_ behaviour
   scope :sorted_by_full_name, ->(direction = "asc") {
