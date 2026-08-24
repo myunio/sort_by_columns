@@ -346,9 +346,11 @@ module Saltbox
             relation = relation.left_outer_joins(includes_needed)
           end
 
-          # Apply the order clause
-          order_string = order_fragments.join(", ")
-          relation.reorder(Arel.sql(order_string))
+          return relation if order_fragments.empty?
+
+          # Keep each fragment separate so Active Record discovers every table
+          # reference and applies the matching association alias.
+          relation.reorder(*order_fragments.map { |fragment| Arel.sql(fragment) })
         end
       end
     end

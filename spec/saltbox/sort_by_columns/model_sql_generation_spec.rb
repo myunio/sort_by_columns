@@ -337,7 +337,7 @@ RSpec.describe Saltbox::SortByColumns::Model, "SQL Generation & Association Test
   describe "JOIN handling" do
     it "creates proper LEFT OUTER JOIN syntax" do
       sql = test_model.sorted_by_columns("organization__name:asc").to_sql
-      expect(sql).to match(/LEFT OUTER JOIN "organizations" "organization" ON "organization"\."id" = "users"\."organization_id"/)
+      expect(sql).to match(/LEFT OUTER JOIN "organizations"(?: AS)? "organization" ON "organization"\."id" = "users"\."organization_id"/)
     end
 
     it "uses correct table alias in JOIN" do
@@ -372,7 +372,7 @@ RSpec.describe Saltbox::SortByColumns::Model, "SQL Generation & Association Test
       sql = test_model.sorted_by_columns("organization__name:asc,category__name:desc").to_sql
 
       # Should have separate JOINs
-      expect(sql).to include('LEFT OUTER JOIN "organizations" "organization"')
+      expect(sql).to match(/LEFT OUTER JOIN "organizations"(?: AS)? "organization"/)
       expect(sql).to include('LEFT OUTER JOIN "categories"')
 
       # Should not duplicate JOINs
@@ -402,7 +402,7 @@ RSpec.describe Saltbox::SortByColumns::Model, "SQL Generation & Association Test
       sql = test_model.sorted_by_columns("company__name:asc").to_sql
 
       # Should create proper JOIN using the association name as alias
-      expect(sql).to include('LEFT OUTER JOIN "organizations" "company"')
+      expect(sql).to match(/LEFT OUTER JOIN "organizations"(?: AS)? "company"/)
       expect(sql).to include("company.name ASC NULLS LAST")
     end
   end

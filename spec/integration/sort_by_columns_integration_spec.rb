@@ -3,13 +3,15 @@ require "rails_helper"
 RSpec.describe "SortByColumns integration", type: :model do
   let!(:org_a) { Organization.create!(name: "Alpha Inc") }
   let!(:org_b) { Organization.create!(name: "Beta Corp") }
+  let!(:division_a) { Division.create!(name: "Apprentices") }
+  let!(:division_b) { Division.create!(name: "Journeypersons") }
 
-  let!(:user1) { User.create!(name: "Charlie", email: "charlie@example.com", organization: org_b) }
-  let!(:user2) { User.create!(name: "Alice", email: "alice@example.com", organization: org_a) }
-  let!(:user3) { User.create!(name: "Bob", email: "bob@example.com", organization: org_a) }
+  let!(:user1) { User.create!(name: "Charlie", email: "charlie@example.com", organization: org_b, division: division_a) }
+  let!(:user2) { User.create!(name: "Alice", email: "alice@example.com", organization: org_a, division: division_b) }
+  let!(:user3) { User.create!(name: "Bob", email: "bob@example.com", organization: org_a, division: division_a) }
 
   before do
-    User.sort_by_columns :name, :email, :organization__name, :c_full_name
+    User.sort_by_columns :name, :email, :organization__name, :division__name, :c_full_name
   end
 
   context "standard column sorting" do
@@ -64,6 +66,28 @@ RSpec.describe "SortByColumns integration", type: :model do
       result_desc = User.sorted_by_columns("organization__name:desc").to_a
       # Users without organizations should appear last (NULLS FIRST for DESC)
       expect(result_desc.first.name).to eq("Orphan")
+    end
+
+    it "sorts every association column in ascending and descending directions" do
+      ascending = User.sorted_by_columns(
+        "organization__name:asc,division__name:desc"
+      ).pluck(:name)
+      descending = User.sorted_by_columns(
+        "organization__name:desc,division__name:asc"
+      ).pluck(:name)
+
+      expect(ascending).to eq(%w[Alice Bob Charlie])
+      expect(descending).to eq(%w[Charlie Bob Alice])
+    end
+
+    it "sorts a base-table column followed by an association column" do
+      alpha = User.create!(name: "Alex", email: "alpha@example.com", organization: org_a)
+      beta = User.create!(name: "Alex", email: "beta@example.com", organization: org_b)
+      result = User.where(id: [alpha.id, beta.id]).sorted_by_columns(
+        "name:asc,organization__name:desc"
+      ).pluck(:id)
+
+      expect(result).to eq([beta.id, alpha.id])
     end
   end
 
